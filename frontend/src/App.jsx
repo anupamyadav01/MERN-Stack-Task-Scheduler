@@ -14,6 +14,10 @@ function App() {
         <Filter />
         <Table />
       </section>
+      <div className="flex-grow text-xl text-red-500 text-center">
+        Search, Filter and History functionality are in progress. <br /> It will
+        be available soon.
+      </div>
       {/* Footer */}
       <footer className="mt-auto bg-gray-800 text-white py-4 text-center text-sm">
         <p>

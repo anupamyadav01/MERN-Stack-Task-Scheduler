@@ -117,3 +117,34 @@ export const updateTask = async (req, res) => {
     });
   }
 };
+
+export const searchTasks = async (req, res) => {
+  try {
+    const { name, email } = req.query; // Extracting query parameters
+
+    // Building the search criteria dynamically
+    const searchCriteria = {};
+    if (name) {
+      searchCriteria.name = { $regex: name, $options: "i" }; // Case-insensitive search
+    }
+    if (email) {
+      searchCriteria.email = { $regex: email, $options: "i" }; // Case-insensitive search
+    }
+
+    // Find tasks based on criteria
+    const tasks = await Task.find(searchCriteria);
+
+    // Respond with tasks
+    res.status(200).json({
+      success: true,
+      count: tasks.length,
+      data: tasks,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
