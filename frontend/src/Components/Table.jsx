@@ -5,12 +5,12 @@ import { getTasks, updateTask, deleteTask } from "../utils/api";
 function Table() {
   const [data, setData] = useState([]);
   async function fetchData() {
-    try {
-      const res = await getTasks();
-      setData(res);
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const res = await getTasks();
+    //   setData(res);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
   async function deleteData(id) {
     try {

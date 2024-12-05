@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,6 +15,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "mongoose": "^8.8.3",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
     "uuid": "^11.0.3",
     "winston": "^3.17.0"
