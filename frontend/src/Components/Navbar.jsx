@@ -3,7 +3,6 @@ import { IoReorderThreeOutline } from "react-icons/io5";
 function Navbar() {
   return (
     <nav className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 text-white shadow-lg">
-      {/* Left Section */}
       <div className="flex items-center gap-4">
         <button className="p-2 rounded-lg hover:bg-gray-700 transition">
           <IoReorderThreeOutline className="text-3xl" />

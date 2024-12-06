@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TiTick } from "react-icons/ti";
 import { ImCross } from "react-icons/im";
 import { getTasks, updateTask, deleteTask } from "../utils/api";
+import { TasksDataContext } from "../App";
 
 function Table() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); // Holds fetched data
   const [showForm, setShowForm] = useState(false);
   const [taskData, setTaskData] = useState({
     name: "",
@@ -18,28 +19,30 @@ function Table() {
   });
   const [isEdit, setIsEdit] = useState(false);
   const [currentTaskId, setCurrentTaskId] = useState(null);
+  const [searchData, setSearchData] = useContext(TasksDataContext);
 
-  // Fetch tasks from the backend
+  // Fetch data from the backend
   async function fetchData() {
     try {
       const res = await getTasks();
-      setData(res?.data); // Update state with the fetched tasks
+      setData(res?.data); // Store full data locally
+      setSearchData(res?.data); // Update context with data
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
   }
 
-  // Delete a task
+  // Delete a task by ID
   async function deleteData(id) {
     try {
       await deleteTask(id);
-      fetchData(); // Refresh tasks after deletion
+      fetchData(); // Refresh data after deletion
     } catch (error) {
       console.error("Error deleting task:", error);
     }
   }
 
-  // Edit a task (opens the form with data pre-filled)
+  // Populate the form with task data for editing
   async function editData(id) {
     const task = data.find((item) => item._id === id);
     if (task) {
@@ -59,7 +62,7 @@ function Table() {
     }
   }
 
-  // Update the task
+  // Update a task
   async function update() {
     try {
       const updatedTask = {
@@ -69,7 +72,7 @@ function Table() {
         message: taskData.message,
       };
       await updateTask(currentTaskId, updatedTask);
-      fetchData(); // Refresh tasks after update
+      fetchData(); // Refresh data after update
       setShowForm(false);
       setIsEdit(false);
     } catch (error) {
@@ -77,11 +80,7 @@ function Table() {
     }
   }
 
-  // Fetch data on component mount
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  // Input change handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTaskData((prevData) => ({
@@ -89,6 +88,11 @@ function Table() {
       [name]: value,
     }));
   };
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="w-full overflow-x-auto flex justify-center bg-gray-50 py-6 rounded-lg shadow-md">
@@ -104,8 +108,8 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {data?.length > 0 ? (
-            data.map((item) => (
+          {searchData?.length > 0 ? (
+            searchData.map((item) => (
               <tr
                 key={item._id}
                 className="hover:bg-gray-100 text-gray-700 transition"
@@ -151,8 +155,6 @@ function Table() {
           )}
         </tbody>
       </table>
-
-      {/* Form Modal */}
       {showForm && (
         <div className="my-5 absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
@@ -165,8 +167,6 @@ function Table() {
             <h3 className="text-2xl font-bold text-gray-700 mb-4 text-center">
               {isEdit ? "Edit Task" : "Create Task"}
             </h3>
-
-            {/* Grid Layout */}
             <div className="grid grid-cols-3 gap-6">
               <div>
                 {["name", "email", "message"].map((field) => (
@@ -209,8 +209,6 @@ function Table() {
                 ))}
               </div>
             </div>
-
-            {/* Buttons */}
             <div className="flex justify-end gap-4 mt-4">
               <button
                 onClick={() => setShowForm(false)}

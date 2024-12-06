@@ -118,33 +118,33 @@ export const updateTask = async (req, res) => {
   }
 };
 
-export const searchTasks = async (req, res) => {
+export const searchTask = async (req, res) => {
+  const { query } = req.query;
+
   try {
-    const { name, email } = req.query; // Extracting query parameters
+    const tasks = await TaskModel.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { email: { $regex: query, $options: "i" } },
+      ],
+    });
 
-    // Building the search criteria dynamically
-    const searchCriteria = {};
-    if (name) {
-      searchCriteria.name = { $regex: name, $options: "i" }; // Case-insensitive search
+    if (!tasks.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No tasks found matching the search query",
+      });
     }
-    if (email) {
-      searchCriteria.email = { $regex: email, $options: "i" }; // Case-insensitive search
-    }
 
-    // Find tasks based on criteria
-    const tasks = await Task.find(searchCriteria);
-
-    // Respond with tasks
     res.status(200).json({
-      success: true,
-      count: tasks.length,
       data: tasks,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error searching tasks:", error);
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Failed to search tasks",
+      error: error.message,
     });
   }
 };

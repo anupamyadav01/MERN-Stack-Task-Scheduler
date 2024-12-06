@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import { IoFilterSharp } from "react-icons/io5";
-import { createTask } from "../utils/api";
+import { createTask, searchTask } from "../utils/api"; // Ensure the searchTask API function is imported
+import { TasksDataContext } from "../App";
 
 function Filter() {
   const [showForm, setShowForm] = useState(false);
@@ -15,6 +16,10 @@ function Filter() {
     month: "*",
     dayOfWeek: "*",
   });
+  // const { searchData, setSearchData } = useContext(TasksDataContext);
+  const [searchData, setSearchData] = useContext(TasksDataContext);
+
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +27,23 @@ function Filter() {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleSearch = async (query) => {
+    try {
+      if (query.trim() === "") {
+        return;
+      }
+      const response = await searchTask(query);
+      setSearchData(response?.data);
+    } catch (error) {
+      console.error("Error during search:", error);
+    }
+  };
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    handleSearch(query);
   };
 
   async function create() {
@@ -55,6 +77,8 @@ function Filter() {
       <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 text-white w-full shadow-lg">
         <div className="w-full md:w-auto">
           <input
+            value={searchQuery}
+            onChange={handleSearchChange}
             type="text"
             placeholder="Search"
             className="w-full md:w-80 p-2 rounded-md border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"

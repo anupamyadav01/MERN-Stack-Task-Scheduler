@@ -1,7 +1,7 @@
 import axios from "axios";
-// const API_URL = "http://localhost:10000/api/tasks/";
-const API_URL =
-  "https://mern-stack-task-scheduler-backend.onrender.com/api/tasks/";
+const API_URL = "http://localhost:10000/api/tasks/";
+// const API_URL =
+//   "https://mern-stack-task-scheduler-backend.onrender.com/api/tasks/";
 export const createTask = async (task) => {
   try {
     const response = await axios.post(`${API_URL}createTask`, task);
@@ -41,6 +41,20 @@ export const deleteTask = async (id) => {
     return response.data;
   } catch (error) {
     console.error(`Error deleting task ${id}:`, { error: error.message });
+    throw error;
+  }
+};
+
+export const searchTask = async (query) => {
+  try {
+    const response = await axios.get(`${API_URL}searchTask`, {
+      params: { query },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error searching tasks with query "${query}":`, {
+      error: error.message,
+    });
     throw error;
   }
 };

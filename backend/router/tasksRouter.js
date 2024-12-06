@@ -3,7 +3,7 @@ import {
   createTask,
   deleteTask,
   getAllTasks,
-  searchTasks,
+  searchTask,
   updateTask,
 } from "../controller/tasksController.js";
 
@@ -17,4 +17,4 @@ TaskRouter.delete("/deleteTask/:id", deleteTask);
 
 TaskRouter.put("/updateTask/:id", updateTask);
 
-TaskRouter.get("/searchTasks", searchTasks);
+TaskRouter.get("/searchTask", searchTask);
