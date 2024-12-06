@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { FaCloudDownloadAlt } from "react-icons/fa";
 import { IoFilterSharp } from "react-icons/io5";
 import { createTask, searchTask } from "../utils/api"; // Ensure the searchTask API function is imported
 import { TasksDataContext } from "../App";
@@ -74,7 +73,7 @@ function Filter() {
   return (
     <div className="flex flex-col items-center">
       {/* Top Bar */}
-      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 text-white w-full shadow-lg">
+      <div className=" flex justify-between items-center p-4 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 text-white w-full shadow-lg">
         <div className="w-full md:w-auto">
           <input
             value={searchQuery}
@@ -94,10 +93,6 @@ function Filter() {
             className="p-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-500 transition"
           >
             + Create
-          </button>
-          <button className="flex items-center gap-2 p-2 rounded-md bg-gray-700 hover:bg-gray-600 text-sm transition">
-            <FaCloudDownloadAlt className="text-lg" />
-            Export
           </button>
         </div>
       </div>

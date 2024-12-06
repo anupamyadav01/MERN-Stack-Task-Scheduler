@@ -1,7 +1,7 @@
 import axios from "axios";
-const API_URL = "http://localhost:10000/api/tasks/";
-// const API_URL =
-//   "https://mern-stack-task-scheduler-backend.onrender.com/api/tasks/";
+// const API_URL = "http://localhost:10000/api/tasks/";
+const API_URL =
+  "https://mern-stack-task-scheduler-backend.onrender.com/api/tasks/";
 export const createTask = async (task) => {
   try {
     const response = await axios.post(`${API_URL}createTask`, task);

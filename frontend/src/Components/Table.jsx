@@ -3,10 +3,12 @@ import { TiTick } from "react-icons/ti";
 import { ImCross } from "react-icons/im";
 import { getTasks, updateTask, deleteTask } from "../utils/api";
 import { TasksDataContext } from "../App";
+import History from "./History"; // Ensure the History component is correctly imported
 
 function Table() {
   const [data, setData] = useState([]); // Holds fetched data
   const [showForm, setShowForm] = useState(false);
+  const [showHistory, setShowHistory] = useState(false); // State to toggle history view
   const [taskData, setTaskData] = useState({
     name: "",
     email: "",
@@ -96,65 +98,79 @@ function Table() {
 
   return (
     <div className="w-full overflow-x-auto flex justify-center bg-gray-50 py-6 rounded-lg shadow-md">
-      <table className="w-full md:w-11/12 border-collapse table-auto bg-white rounded-lg shadow">
-        <thead>
-          <tr className="bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 text-white text-sm uppercase">
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Schedule</th>
-            <th className="px-4 py-2">Email</th>
-            <th className="px-4 py-2">Message</th>
-            <th className="px-4 py-2">Completed</th>
-            <th className="px-4 py-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {searchData?.length > 0 ? (
-            searchData.map((item) => (
-              <tr
-                key={item._id}
-                className="hover:bg-gray-100 text-gray-700 transition"
-              >
-                <td className="border px-4 py-5">{item.name}</td>
-                <td className="border px-4 py-5">{item.schedule}</td>
-                <td className="border px-4 py-5">{item.email}</td>
-                <td className="border px-4 py-5">{item.message}</td>
-                <td className="border px-4 py-5 text-center">
-                  {item.isCompleted ? (
-                    <TiTick className="text-green-500 text-xl" />
-                  ) : (
-                    <ImCross className="text-red-500 text-sm" />
-                  )}
-                </td>
-                <td className="border px-4 py-1 text-center">
-                  <div className="flex justify-center gap-4">
-                    <button
-                      onClick={() => editData(item._id)}
-                      className="px-4 py-1 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-400 transition"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => deleteData(item._id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-400 transition"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
+      {showHistory ? (
+        <History onClose={() => setShowHistory(false)} /> // Pass a close callback to History
+      ) : (
+        <div className="w-full flex flex-col justify-center items-center">
+          <div className="w-[86%] flex justify-end">
+            <button
+              onClick={() => setShowHistory(true)}
+              className="px-4 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-blue-400 transition mb-4"
+            >
+              Show History
+            </button>
+          </div>
+          <table className="w-full md:w-11/12 border-collapse table-auto bg-white rounded-lg shadow">
+            <thead>
+              <tr className="bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 text-white text-sm uppercase">
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Schedule</th>
+                <th className="px-4 py-2">Email</th>
+                <th className="px-4 py-2">Message</th>
+                <th className="px-4 py-2">Completed</th>
+                <th className="px-4 py-2">Action</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td
-                colSpan="8"
-                className="border px-4 py-6 text-center text-gray-600 italic"
-              >
-                No Data Available
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {searchData?.length > 0 ? (
+                searchData.map((item) => (
+                  <tr
+                    key={item._id}
+                    className="hover:bg-gray-100 text-gray-700 transition"
+                  >
+                    <td className="border px-4 py-5">{item.name}</td>
+                    <td className="border px-4 py-5">{item.schedule}</td>
+                    <td className="border px-4 py-5">{item.email}</td>
+                    <td className="border px-4 py-5">{item.message}</td>
+                    <td className="border px-4 py-5 text-center">
+                      {item.isCompleted ? (
+                        <TiTick className="text-green-500 text-xl" />
+                      ) : (
+                        <ImCross className="text-red-500 text-sm" />
+                      )}
+                    </td>
+                    <td className="border px-4 py-1 text-center">
+                      <div className="flex justify-center gap-4">
+                        <button
+                          onClick={() => editData(item._id)}
+                          className="px-4 py-1 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-400 transition"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteData(item._id)}
+                          className="px-4 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-400 transition"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="8"
+                    className="border px-4 py-6 text-center text-gray-600 italic"
+                  >
+                    No Data Available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
       {showForm && (
         <div className="my-5 absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
@@ -218,7 +234,7 @@ function Table() {
               </button>
               <button
                 onClick={isEdit ? update : "create"}
-                className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-500 transition"
+                className="px-4 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-400 transition"
               >
                 {isEdit ? "Update" : "Create"}
               </button>
